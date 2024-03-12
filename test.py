@@ -1,21 +1,22 @@
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QApplication, QWidget, QInputDialog,QMessageBox
+from PyQt5.QtWidgets import QApplication, QWidget,QInputDialog,QMessageBox
 from PyQt5.QtWidgets import QMainWindow
 from ui import Ui_MainWindow
+
 import json
 
-notes= {
-    "Ласкаво просимо!":{
-        "текст":"Привіт усім! Це моя крута програмка!",
-        "теги":["привітання","старт"]
-    },
-    "Програмування!":{
-        "текст":"Ми працюємо на мові Python",
-        "теги":["Python","логіка"]
-    }
-}
-with open("data.json","w",encoding="utf-8")as file:
-    json.dump(notes,file,sort_keys=True)
+#notes= {
+    #"Ласкаво просимо!":{
+       # "текст":"Привіт усім! Це моя крута програмка!",
+       # "теги":["привітання","старт"]
+    #},
+    #"Програмування!":{
+       # "текст":"Ми працюємо на мові Python",
+       # "теги":["Python","логіка"]
+   # }
+#}
+#with open("data.json","w",encoding="utf-8")as file:
+    #json.dump(notes,file,sort_keys=True)
 
 class Widget(QMainWindow):
     def init(self):
@@ -38,8 +39,8 @@ class Widget(QMainWindow):
 
     def add_note(self):
         name,ok=QInputDialog.getText(self,"Додати замітку","Назва замітки")
-        if ok==True and name!= "":
-            notes[name]={"текст":"","теги":[]}
+        if ok==True and name !="":
+            notes[name]={"текст":"", "теги":[]}
             self.ui.list_notes.addItem(name)
 
     def del_note(self):
@@ -50,74 +51,75 @@ class Widget(QMainWindow):
             self.ui.text.clear()
             self.ui.list_tags.clear()
             self.ui.list_notes.addItems(notes)
-            with open ("data.json", "w" ,encoding="utf-8")as file:
+            with open("data.json","w",encoding="utf-8")as file:
                 json.dump(notes,file)
 
         else:
             win=QMessageBox()
             win.setText("Замітка для видалення не вибрана!")
             win.exec()
+
     def save_note(self):
         if self.ui.list_notes.selectedItems():
             key=self.ui.list_notes.selectedItems()[0].text()
-            notes[key]["Текст"]=self.ui.text.toPlainText()
-            with open ("data.json", "w" ,encoding="utf-8")as file:
+            notes[key]['текст']=self.ui.text.toPlainText()
+            with open("data.json","w",encoding="utf-8")as file:
                 json.dump(notes,file)
 
         else:
             win=QMessageBox()
-            win.setText("Замітка для збереження не вибрана!")
+            win.setText("Замітка для збереження  не вибрана!")
             win.exec()
-        
-        def add_tag(self):
-            if self.ui.list_notes.selectedItems():
-                key=self.ui.list_notes.selectedItems()[0].text()
-                tag=self.ui.line_search.text()
-                if tag not in notes[key]["теги"]:
-                    notes[key]["теги"].append(tag)
-                    self.ui.line_search.clear()
-                    self.ui.list_tags.addItem(tag)
-                    with open ("data.json", "w" ,encoding="utf-8")as file:
-                        json.dump(notes,file)
+    def add_tag(self):
+        if self.ui.list_notes.selectedItems():
+            key=self.ui.list_notes.selectedItems()[0].text()
+            tag=self.ui.line_search.text()
+            if tag not in notes[key]["теги"]:
+                notes[key]["теги"].append(tag)
+                self.ui.line_search.clear()
+                self.ui.list_tags.addItem(tag)
+                with open("data.json","w",encoding="utf-8")as file:
+                    json.dump(notes,file)
 
-            else:
-                win=QMessageBox()
-                win.setText("Замітка для додавання не вибрана!")
-                win.exec()
-        def del_tag(self):
-            if self.ui.list_notes.selectedItems():
-                key=self.ui.list_notes.selectedItems()[0].text()
-                tag=self.ui.list_tags.selectedItems()[0].text()
-                notes[key]["теги"].remove(tag)
-                self.ui.list_tags.clear()
-                self.ui.list_tags.addItems(notes[key]["теги"])
-                with open ("data.json", "w" ,encoding="utf-8")as file:
-                        json.dump(notes,file)
+        else:
+            win=QMessageBox()
+            win.setText("Замітка для додавання тегу  не вибрана!")
+            win.exec()
+    def del_tag(self):
+        if self.ui.list_notes.selectedItems():
+            key=self.ui.list_notes.selectedItems()[0].text()
+            tag=self.ui.list_tags.selectedItems()[0].text()
+            notes[key]["теги"].remove(tag)
+            self.ui.list_tags.clear()
+            self.ui.list_tags.addItems(notes[key]["теги"])
+            with open("data.json","w",encoding="utf-8")as file:
+                    json.dump(notes,file)
 
-            else:
-                win=QMessageBox()
-                win.setText("Замітка для видалення не вибрана!")
-                win.exec()
-        def search_tag(self):
-            if self.ui.line_search.text() != "":
-                if self.ui.btn_search.text()== "Шукати замітк по тегу":
-                    notes_filter={}
-                    tag=self.ui.line_search.text()
-                    for note in notes:
-                        if tag in notes[note]["теги"]:
-                            notes_filter[note]=notes[note]
-                    self.ui.list_notes.clear()
-                    self.ui.list_tags.clear()
-                    self.ui.text.clear()
-                    self.ui.list_notes.addItems(notes_filter)
-                    self.ui.btn_search.setText("Очистити")
-                elif self.ui.btn_search.text()=="Очистити":
-                    self.ui.list_notes.clear()
-                    self.ui.list_tags.clear()
-                    self.ui.text.clear()
-                    self.ui.list_notes.addItems(notes)
-                    self.ui.line_search.clear()
-                    self.ui.btn_search.setText("Шукати замітки по тегу")
+        else:
+            win=QMessageBox()
+            win.setText("Замітка для видалення тегу  не вибрана!")
+            win.exec()
+            def search_tag(self):
+                if self.ui.line_search.text() !="":
+                    if self.ui.btn_search.text()=="Шукати замітки по тегу":
+                        notes_filter={}
+                        tag=self.ui.line_search.text()
+                        for note in notes:
+                            if tag in notes[note]["теги"]:
+                                notes_filter[note]=notes[note]
+                        self.ui.list_notes.clear()
+                        self.ui.list_tags.clear()
+                        self.ui.text.clear()
+                        self.ui.list_notes.addItems(notes_filter)
+                        self.ui.btn_search.setText("Очистити")
+                    elif self.ui.btn_search.text()=="Очистити":
+                        self.ui.list_notes.clear()
+                        self.ui.list_tags.clear()
+                        self.ui.text.clear()
+                        self.ui.list_notes.addItems(notes)
+                        self.ui.line_search.clear()
+                        self.ui.btn_search.setText("Шукати замітки по тегу")
+
 
 app=QApplication([])
 ex=Widget()
@@ -128,4 +130,3 @@ with open("data.json","r",encoding="utf-8")as file:
     ex.ui.list_notes.addItems(notes)
 
 app.exec_()
-
