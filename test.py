@@ -5,22 +5,22 @@ from ui import Ui_MainWindow
 
 import json
 
-#notes= {
-    #"Ласкаво просимо!":{
-       # "текст":"Привіт усім! Це моя крута програмка!",
-       # "теги":["привітання","старт"]
-    #},
-    #"Програмування!":{
-       # "текст":"Ми працюємо на мові Python",
-       # "теги":["Python","логіка"]
-   # }
-#}
-#with open("data.json","w",encoding="utf-8")as file:
-    #json.dump(notes,file,sort_keys=True)
+notes= {
+    "Ласкаво просимо!":{
+       "текст":"Привіт усім! Це моя крута програмка!",
+       "теги":["привітання","старт"]
+    },
+    "Програмування!":{
+       "текст":"Ми працюємо на мові Python",
+       "теги":["Python","логіка"]
+   }
+}
+with open("data.json","w",encoding="utf-8")as file:
+    json.dump(notes,file,sort_keys=True)
 
 class Widget(QMainWindow):
-    def init(self):
-        super().init()
+    def __init__(self):
+        super().__init__()
         self.ui=Ui_MainWindow()
         self.ui.setupUi(self)
         self.ui.list_notes.itemClicked.connect(self.show_note)
@@ -94,31 +94,30 @@ class Widget(QMainWindow):
             self.ui.list_tags.addItems(notes[key]["теги"])
             with open("data.json","w",encoding="utf-8")as file:
                     json.dump(notes,file)
-
         else:
             win=QMessageBox()
             win.setText("Замітка для видалення тегу  не вибрана!")
             win.exec()
-            def search_tag(self):
-                if self.ui.line_search.text() !="":
-                    if self.ui.btn_search.text()=="Шукати замітки по тегу":
-                        notes_filter={}
-                        tag=self.ui.line_search.text()
-                        for note in notes:
-                            if tag in notes[note]["теги"]:
-                                notes_filter[note]=notes[note]
-                        self.ui.list_notes.clear()
-                        self.ui.list_tags.clear()
-                        self.ui.text.clear()
-                        self.ui.list_notes.addItems(notes_filter)
-                        self.ui.btn_search.setText("Очистити")
-                    elif self.ui.btn_search.text()=="Очистити":
-                        self.ui.list_notes.clear()
-                        self.ui.list_tags.clear()
-                        self.ui.text.clear()
-                        self.ui.list_notes.addItems(notes)
-                        self.ui.line_search.clear()
-                        self.ui.btn_search.setText("Шукати замітки по тегу")
+    def search_tag(self):
+        if self.ui.line_search.text() !="":
+            if self.ui.btn_search.text()=="Шукати замітки по тегу":
+                notes_filter={}
+                tag=self.ui.line_search.text()
+                for note in notes:
+                    if tag in notes[note]["теги"]:
+                        notes_filter[note]=notes[note]
+                self.ui.list_notes.clear()
+                self.ui.list_tags.clear()
+                self.ui.text.clear()
+                self.ui.list_notes.addItems(notes_filter)
+                self.ui.btn_search.setText("Очистити")
+            elif self.ui.btn_search.text()=="Очистити":
+                self.ui.list_notes.clear()
+                self.ui.list_tags.clear()
+                self.ui.text.clear()
+                self.ui.list_notes.addItems(notes)
+                self.ui.line_search.clear()
+                self.ui.btn_search.setText("Шукати замітки по тегу")
 
 
 app=QApplication([])
@@ -127,6 +126,6 @@ ex.show()
 
 with open("data.json","r",encoding="utf-8")as file:
     notes=json.load(file)
-    ex.ui.list_notes.addItems(notes)
+ex.ui.list_notes.addItems(notes)
 
 app.exec_()
